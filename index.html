@@ -15,29 +15,22 @@
         .label { color: #666; font-size: 14px; }
         .value { font-weight: bold; font-size: 16px; color: #333; }
         .copy-btn { background: white; color: #1e88e5; border: 1px solid #1e88e5; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        
-        /* শুধুমাত্র ২ট লোগোর জন্য ডিজাইন */
-        .apps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 15px; }
+        .apps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
         .app-btn { border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; text-align: center; background: #fff; }
-        .app-btn img { height: 40px; display: block; margin: 0 auto 5px; object-fit: contain; }
-        
+        .app-btn img { height: 25px; display: block; margin: 0 auto 5px; }
         .utr-section { padding: 20px; }
         .utr-input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0; font-size: 16px; background: #f9f9f9; }
         .submit-btn { width: 100%; background: #2196f3; color: white; border: none; padding: 14px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; }
-
-        /* উপরের কপি নোটিফিকেশন */
-        #copy-toast { visibility: hidden; min-width: 150px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: fixed; z-index: 100; left: 50%; top: 20px; transform: translateX(-50%); font-size: 14px; }
-        #copy-toast.show { visibility: visible; animation: slideIn 0.3s, fadeOut 0.3s 1.7s; }
-        @keyframes slideIn { from {top: -50px; opacity: 0;} to {top: 20px; opacity: 1;} }
-        @keyframes fadeOut { from {opacity: 1;} to {opacity: 0;} }
+        .notice { padding: 15px; color: #d32f2f; font-size: 13px; line-height: 1.5; }
         
+        /* Success Screen CSS */
         #success-screen { display: none; text-align: center; padding: 40px 20px; }
         .success-icon { font-size: 80px; color: #2ecc71; margin-bottom: 20px; }
+        .success-title { font-size: 24px; color: #2c3e50; font-weight: bold; margin-bottom: 10px; }
+        .success-msg { color: #7f8c8d; font-size: 16px; line-height: 1.4; }
     </style>
 </head>
 <body>
-
-<div id="copy-toast">Copied!</div>
 
 <div class="container" id="main-container">
     <div id="payment-page">
@@ -48,12 +41,12 @@
             <div class="row">
                 <span class="label">Amount</span>
                 <span class="value">₹ <span id="display-amount">0</span></span>
-                <button class="copy-btn" onclick="copyText('display-amount', 'Amount')">COPY</button>
+                <button class="copy-btn" onclick="copyText('display-amount')">COPY</button>
             </div>
             <div class="row">
                 <span class="label">VPA/UPI ID</span>
                 <span class="value" id="display-vpa">notset@upi</span>
-                <button class="copy-btn" onclick="copyText('display-vpa', 'UPI ID')">COPY</button>
+                <button class="copy-btn" onclick="copyText('display-vpa')">COPY</button>
             </div>
             <div class="row">
                 <span class="label">Name</span>
@@ -62,20 +55,33 @@
         </div>
 
         <div class="apps-grid">
-            <div class="app-btn"><img src="phonepe.png">PhonePe</div>
-            <div class="app-btn"><img src="gpay.png">Google Pay</div>
+            <div class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg">PhonePe</div>
+            <div class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logonet_Paytm.png">Paytm</div>
+            <div class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg">GPay</div>
+            <div class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/BHIM_Logo.png">BHIM</div>
         </div>
 
         <div class="utr-section">
             <input type="text" class="utr-input" id="utr" placeholder="Input 12-digit UTR number">
             <button class="submit-btn" onclick="submitUTR()">Submit UTR</button>
         </div>
+
+        <div class="notice">
+            <b>Notice:</b><br>
+            1. One UPI can only transfer money <b>once</b>.<br>
+            2. Don't change the <b>payment amount</b>.
+        </div>
     </div>
 
     <div id="success-screen">
         <div class="success-icon">✔</div>
-        <div style="font-size: 24px; font-weight: bold;">Payment Successful</div>
-        <div style="margin-top: 10px; color: #7f8c8d;">Your UTR: <span id="final-utr"></span></div>
+        <div class="success-title">Payment Successful</div>
+        <div class="success-msg">
+            Your UTR has been submitted.<br>
+            Please wait, your order is being processed.
+        </div>
+        <br>
+        <div style="font-size: 14px; color: #95a5a6;">Transaction ID: <span id="final-utr"></span></div>
     </div>
 </div>
 
@@ -83,25 +89,22 @@
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('display-amount').innerText = urlParams.get('amntInput') || '0';
     document.getElementById('display-vpa').innerText = urlParams.get('vpaInput') || 'notset@upi';
-    document.getElementById('display-name').innerText = decodeURIComponent(urlParams.get('nameInput') || 'Not Provided');
+    const name = urlParams.get('nameInput');
+    document.getElementById('display-name').innerText = name ? decodeURIComponent(name) : 'Not Provided';
 
     let time = 600;
+    const timerEl = document.getElementById('timer');
     setInterval(() => {
         let mins = Math.floor(time / 60);
         let secs = time % 60;
-        document.getElementById('timer').innerHTML = `${mins} : ${secs < 10 ? '0' : ''}${secs}`;
+        timerEl.innerHTML = `${mins} : ${secs < 10 ? '0' : ''}${secs}`;
         if(time > 0) time--;
     }, 1000);
 
-    function copyText(id, type) {
+    function copyText(id) {
         const text = document.getElementById(id).innerText;
         navigator.clipboard.writeText(text);
-        
-        // উপরে নোটিফিকেশন দেখাবে
-        const toast = document.getElementById("copy-toast");
-        toast.innerText = type + " Copied!";
-        toast.className = "show";
-        setTimeout(() => { toast.className = ""; }, 2000);
+        alert("Copied: " + text);
     }
 
     function submitUTR() {
@@ -109,6 +112,7 @@
         if(utr.length < 12) {
             alert("Please enter a valid 12-digit UTR number");
         } else {
+            // Hide payment page and show success screen
             document.getElementById('payment-page').style.display = 'none';
             document.getElementById('success-screen').style.display = 'block';
             document.getElementById('final-utr').innerText = utr;
