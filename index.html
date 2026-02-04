@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fast Pay Now</title>
     <style>
-        body { font-family: 'Segoe UI', sans-serif; background-color: #f4f7f6; margin: 0; padding: 15px; display: flex; justify-content: center; }
-        .container { background: white; width: 100%; max-width: 400px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; position: relative; min-height: 550px; }
+        body { font-family: sans-serif; background-color: #f4f7f6; margin: 0; padding: 15px; display: flex; justify-content: center; }
+        .container { background: white; width: 100%; max-width: 400px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); overflow: hidden; position: relative; min-height: 520px; }
         .header { background: #1e88e5; color: white; padding: 15px; text-align: center; font-weight: bold; font-size: 18px; }
         .timer-section { background: #f0f7ff; padding: 10px; text-align: center; font-size: 16px; border-bottom: 1px solid #ddd; }
         .timer { color: #d32f2f; font-weight: bold; }
@@ -15,29 +15,29 @@
         .label { color: #666; font-size: 14px; }
         .value { font-weight: bold; font-size: 16px; color: #333; }
         .copy-btn { background: #e3f2fd; color: #1e88e5; border: 1px solid #1e88e5; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
-        .apps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
-        .app-btn { border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; text-align: center; background: #fff; display: flex; flex-direction: column; align-items: center; }
-        .app-btn img { height: 35px; width: auto; margin-bottom: 5px; object-fit: contain; }
+        
+        /* শুধুমাত্র ২ট অ্যাপের জন্য গ্রিড */
+        .apps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .app-btn { border: 1px solid #e0e0e0; border-radius: 10px; padding: 15px; text-align: center; background: #fff; display: flex; flex-direction: column; align-items: center; }
+        .app-btn img { height: 45px; width: auto; margin-bottom: 8px; object-fit: contain; }
+        
         .utr-section { padding: 20px; }
         .utr-input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0; font-size: 16px; background: #f9f9f9; }
         .submit-btn { width: 100%; background: #2196f3; color: white; border: none; padding: 14px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .notice { padding: 15px; color: #d32f2f; font-size: 13px; line-height: 1.4; border-top: 1px solid #eee; }
         
-        /* উপরের কপি নোটিফিকেশন */
-        #copy-toast { visibility: hidden; min-width: 150px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: fixed; z-index: 100; left: 50%; top: 20px; transform: translateX(-50%); font-size: 14px; font-weight: bold; }
+        #copy-toast { visibility: hidden; min-width: 150px; background-color: #333; color: #fff; text-align: center; border-radius: 8px; padding: 10px; position: fixed; z-index: 100; left: 50%; top: 20px; transform: translateX(-50%); font-size: 14px; }
         #copy-toast.show { visibility: visible; animation: slideIn 0.3s, fadeOut 0.3s 1.7s; }
         @keyframes slideIn { from {top: -50px; opacity: 0;} to {top: 20px; opacity: 1;} }
         @keyframes fadeOut { from {opacity: 1;} to {opacity: 0;} }
-
-        #success-screen { display: none; text-align: center; padding: 50px 20px; }
-        .success-icon { font-size: 80px; color: #2ecc71; margin-bottom: 20px; }
+        
+        #success-screen { display: none; text-align: center; padding: 60px 20px; }
     </style>
 </head>
 <body>
 
 <div id="copy-toast">Copied!</div>
 
-<div class="container" id="main-container">
+<div class="container">
     <div id="payment-page">
         <div class="header">Payment Gateway</div>
         <div class="timer-section">Order will be closed in: <span id="timer" class="timer">10:00</span></div>
@@ -60,30 +60,22 @@
         </div>
 
         <div class="apps-grid">
-            <div class="app-btn"><img src="https://raw.githubusercontent.com/fast-pay-now/payment-page/main/phonepe.png" alt="PhonePe">PhonePe</div>
-            <div class="app-btn"><img src="https://raw.githubusercontent.com/fast-pay-now/payment-page/main/paytm.png" alt="Paytm">Paytm</div>
-            <div class="app-btn"><img src="https://raw.githubusercontent.com/fast-pay-now/payment-page/main/gpay.png" alt="GPay">GPay</div>
-            <div class="app-btn"><img src="https://raw.githubusercontent.com/fast-pay-now/payment-page/main/bhim.png" alt="BHIM">BHIM</div>
+            <div class="app-btn"><img src="phonepe.png" alt="PhonePe">PhonePe</div>
+            <div class="app-btn"><img src="gpay.png" alt="GPay">GPay</div>
         </div>
 
         <div class="utr-section">
             <input type="text" class="utr-input" id="utr" placeholder="Input 12-digit UTR number">
             <button class="submit-btn" onclick="submitUTR()">Submit UTR</button>
         </div>
-
-        <div class="notice">
-            <b>Notice:</b><br>
-            1. One UPI can only transfer money <b>once</b>.<br>
-            2. Don't change the <b>payment amount</b>.
-        </div>
     </div>
 
     <div id="success-screen">
-        <div class="success-icon">✔</div>
-        <div style="font-size: 24px; font-weight: bold; color: #2c3e50; margin-bottom: 10px;">Payment Successful</div>
-        <div style="font-size: 16px; color: #7f8c8d;">Your UTR has been submitted.</div>
+        <div style="font-size: 80px; color: #2ecc71;">✔</div>
+        <div style="font-size: 24px; font-weight: bold; color: #2c3e50;">Payment Successful</div>
+        <p style="color: #7f8c8d;">Your UTR has been submitted.</p>
         <br>
-        <div style="font-size: 14px; color: #95a5a6;">Transaction ID: <span id="final-utr"></span></div>
+        <div style="font-size: 14px; color: #95a5a6;">UTR: <span id="final-utr"></span></div>
     </div>
 </div>
 
@@ -91,27 +83,19 @@
     const urlParams = new URLSearchParams(window.location.search);
     document.getElementById('display-amount').innerText = urlParams.get('amntInput') || '0';
     document.getElementById('display-vpa').innerText = urlParams.get('vpaInput') || 'notset@upi';
-    const name = urlParams.get('nameInput');
-    document.getElementById('display-name').innerText = name ? decodeURIComponent(name) : 'Not Provided';
+    document.getElementById('display-name').innerText = decodeURIComponent(urlParams.get('nameInput') || 'Not Provided');
 
     let time = 600;
-    const timerEl = document.getElementById('timer');
     setInterval(() => {
         let mins = Math.floor(time / 60);
         let secs = time % 60;
-        timerEl.innerHTML = `${mins} : ${secs < 10 ? '0' : ''}${secs}`;
+        document.getElementById('timer').innerHTML = `${mins} : ${secs < 10 ? '0' : ''}${secs}`;
         if(time > 0) time--;
     }, 1000);
 
     function copyText(id, type) {
         const text = document.getElementById(id).innerText;
-        const el = document.createElement('textarea');
-        el.value = text;
-        document.body.appendChild(el);
-        el.select();
-        document.execCommand('copy');
-        document.body.removeChild(el);
-        
+        navigator.clipboard.writeText(text);
         const toast = document.getElementById("copy-toast");
         toast.innerText = "✓ " + type + " Copied!";
         toast.className = "show";
