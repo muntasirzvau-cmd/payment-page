@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,12 +17,13 @@
         .copy-btn { background: white; color: #1e88e5; border: 1px solid #1e88e5; padding: 6px 15px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; }
         .apps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding: 15px; }
         .app-btn { border: 1px solid #e0e0e0; border-radius: 8px; padding: 10px; text-align: center; background: #fff; }
-        .app-btn img { height: 28px; width: auto; display: block; margin: 0 auto 5px; object-fit: contain; }
+        .app-btn img { height: 25px; display: block; margin: 0 auto 5px; }
         .utr-section { padding: 20px; }
         .utr-input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ddd; border-radius: 8px; margin: 10px 0; font-size: 16px; background: #f9f9f9; }
         .submit-btn { width: 100%; background: #2196f3; color: white; border: none; padding: 14px; border-radius: 25px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        .notice { padding: 15px; color: #d32f2f; font-size: 13px; line-height: 1.4; border-top: 1px solid #eee; }
+        .notice { padding: 15px; color: #d32f2f; font-size: 13px; line-height: 1.5; }
         
+        /* Success Screen CSS */
         #success-screen { display: none; text-align: center; padding: 40px 20px; }
         .success-icon { font-size: 80px; color: #2ecc71; margin-bottom: 20px; }
         .success-title { font-size: 24px; color: #2c3e50; font-weight: bold; margin-bottom: 10px; }
@@ -53,17 +54,14 @@
             </div>
         </div>
 
-        <div style="text-align: center; color: #1e88e5; font-size: 14px; margin-top: 15px;">ⓘ How to transfer money?</div>
-
         <div class="apps-grid">
-            <div class="app-btn"><img src="https://img.icons8.com/color/144/phonepe.png" alt="PhonePe">PhonePe</div>
-            <div class="app-btn"><img src="https://img.icons8.com/color/144/paytm.png" alt="Paytm">Paytm</div>
-            <div class="app-btn"><img src="https://img.icons8.com/color/144/google-pay-india.png" alt="GPay">GPay</div>
-            <div class="app-btn"><img src="https://www.vectorlogo.zone/logos/upibhim/upibhim-icon.svg" alt="BHIM">BHIM</div>
+            <div class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/7/71/PhonePe_Logo.svg">PhonePe</div>
+            <div class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logonet_Paytm.png">Paytm</div>
+            <div class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg">GPay</div>
+            <div class="app-btn"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/BHIM_Logo.png">BHIM</div>
         </div>
 
         <div class="utr-section">
-            <div style="color: #1e88e5; font-size: 13px;">↓ Fill the UTR numbers after you done payment</div>
             <input type="text" class="utr-input" id="utr" placeholder="Input 12-digit UTR number">
             <button class="submit-btn" onclick="submitUTR()">Submit UTR</button>
         </div>
@@ -71,7 +69,7 @@
         <div class="notice">
             <b>Notice:</b><br>
             1. One UPI can only transfer money <b>once</b>.<br>
-            2. Don't change the <b>payment amount</b>. Otherwise, the order cannot be closed.
+            2. Don't change the <b>payment amount</b>.
         </div>
     </div>
 
@@ -114,6 +112,7 @@
         if(utr.length < 12) {
             alert("Please enter a valid 12-digit UTR number");
         } else {
+            // Hide payment page and show success screen
             document.getElementById('payment-page').style.display = 'none';
             document.getElementById('success-screen').style.display = 'block';
             document.getElementById('final-utr').innerText = utr;
