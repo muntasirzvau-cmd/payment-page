@@ -16,15 +16,15 @@
 
         .data-card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .label { color: #6b7280; font-size: 14px; width: 30%; }
-        .val { font-weight: bold; font-size: 15px; color: #111827; flex-grow: 1; text-align: right; margin-right: 15px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .val { font-weight: bold; font-size: 15px; color: #111827; flex-grow: 1; text-align: right; margin-right: 15px; overflow: hidden; text-overflow: ellipsis; }
         .copy-btn { border: 1px solid #3b82f6; color: #3b82f6; background: white; padding: 6px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; font-weight: 500; }
 
         .help-link { color: #3b82f6; font-size: 13px; text-decoration: none; display: block; margin: 15px 0; }
         
-        /* এখানে পরিবর্তন করা হয়েছে: এখন ২টা কলামে মাত্র ২টা অ্যাপ থাকবে */
+        /* ২ টি অপশন এর জন্য গ্রিড */
         .grid-apps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .app-box { background: white; border: 1px solid #e5e7eb; border-radius: 8px; height: 65px; display: flex; align-items: center; justify-content: center; }
-        .app-box img { max-height: 35px; width: auto; }
+        .app-box { background: white; border: 1px solid #e5e7eb; border-radius: 8px; height: 65px; display: flex; align-items: center; justify-content: center; padding: 5px; }
+        .app-box img { max-height: 40px; width: auto; max-width: 90%; }
 
         .utr-hint { color: #3b82f6; font-size: 13px; margin-bottom: 10px; display: block; }
         .utr-input-box { background: white; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; padding: 12px 0; margin-bottom: 15px; }
@@ -72,10 +72,10 @@
 
         <div class="grid-apps">
             <div class="app-box">
-                <img src="https://static.wikia.nocookie.net/logopedia/images/e/e1/PhonePe_Logo.svg" alt="PhonePe">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" alt="UPI">
             </div>
             <div class="app-box">
-                <img src="https://www.vectorlogo.zone/logos/google_pay/google_pay-ar21.svg" alt="GPay">
+                <img src="https://www.vectorlogo.zone/logos/google_pay/google_pay-ar21.svg" alt="Google Pay">
             </div>
         </div>
 
@@ -108,7 +108,6 @@
     document.getElementById('amnt').innerText = p.get('amntInput') || "5200";
     document.getElementById('vpa').innerText = p.get('vpaInput') || "444444784@axl";
 
-    // টাইমার ফাংশন (৮:৪৫ থেকে শুরু)
     let totalSec = (8 * 60) + 45;
     function startTimer() {
         let timer = setInterval(function() {
@@ -124,8 +123,9 @@
 
     function copy(id) {
         const t = document.getElementById(id).innerText;
-        navigator.clipboard.writeText(t);
-        alert("Copied!");
+        navigator.clipboard.writeText(t).then(() => {
+            alert("Copied!");
+        });
     }
 
     function submitUTR() {
