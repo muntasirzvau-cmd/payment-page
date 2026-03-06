@@ -1,59 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Success Page</title>
-    <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 90%; max-width: 400px; text-align: center; }
-        .details { text-align: left; background: #fefefe; padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #eee; }
-        input { width: 100%; padding: 14px; margin: 15px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 16px; box-sizing: border-box; }
-        .btn { background-color: #28a745; color: white; border: none; padding: 16px; width: 100%; border-radius: 10px; font-size: 18px; font-weight: bold; cursor: pointer; }
-        
-        /* Success Screen */
-        #success-screen { display: none; }
-        .tick { font-size: 70px; color: #28a745; margin-bottom: 15px; }
-        .success-title { color: #28a745; font-size: 24px; font-weight: bold; margin-bottom: 10px; }
-        .thank-you-text { color: #555; font-size: 18px; line-height: 1.5; margin: 5px 0; }
-    </style>
+    <title>Payment</title>
 </head>
-<body>
+<body style="padding: 20px; font-family: sans-serif;">
 
-<div class="card" id="payment-box">
-    <h2 style="margin-top:0;">Payment Verification</h2>
-    <div class="details">
-        <p><strong>Payee:</strong> <span id="n"></span></p>
-        <p><strong>UPI ID:</strong> <span id="v"></span></p>
-        <p><strong>Amount:</strong> ₹<span id="a"></span></p>
-    </div>
-
-    <input type="text" id="utr" placeholder="Enter 12-digit UTR Number" maxlength="12">
-    <button class="btn" onclick="done()">Submit</button>
+<div id="first-view">
+    <p>Payee Name: <b id="name"></b></p>
+    <p>UPI ID: <b id="vpa"></b></p>
+    <p>Amount: ₹<b id="amnt"></b></p>
+    
+    <br>
+    <label>Enter 12 Digit UTR:</label><br>
+    <input type="text" id="utr-in" maxlength="12" style="padding: 8px; margin-top: 5px; width: 80%;">
+    <br><br>
+    <button onclick="check()" style="padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px;">Submit</button>
 </div>
 
-<div class="card" id="success-screen">
-    <div class="tick">✔</div>
-    <div class="success-title">Your Payment Is Successful</div>
-    <div class="thank-you-text">Thank You For Staying With Us</div>
-    <div class="thank-you-text" style="font-weight: 500;">Thank You So Much Sir/Ma'am</div>
-    <p style="margin-top: 20px; color: #888; font-size: 14px;">UTR: <span id="show-utr"></span></p>
+<div id="success-view" style="display: none; text-align: center; margin-top: 50px;">
+    <h1 style="color: green;">✔</h1>
+    <h2 style="color: green;">Your Payment Is Successful</h2>
+    <h3>Thank You For Staying With Us</h3>
+    <p>Thank You So Much Sir/Ma'am</p>
 </div>
 
 <script>
-    const p = new URLSearchParams(window.location.search);
-    document.getElementById('n').innerText = p.get('nameInput') || "S DATTATHREYA";
-    document.getElementById('v').innerText = p.get('vpaInput') || "444444784@axl";
-    document.getElementById('a').innerText = p.get('amntInput') || "5200";
+    // URL থেকে আগের মতোই ডেটা নেওয়া হচ্ছে
+    const urlParams = new URLSearchParams(window.location.search);
+    document.getElementById('name').innerText = urlParams.get('nameInput') || "S DATTATHREYA";
+    document.getElementById('vpa').innerText = urlParams.get('vpaInput') || "444444784@axl";
+    document.getElementById('amnt').innerText = urlParams.get('amntInput') || "5200";
 
-    function done() {
-        const val = document.getElementById('utr').value;
-        if(val.length === 12) {
-            document.getElementById('payment-box').style.display = 'none';
-            document.getElementById('success-screen').style.display = 'block';
-            document.getElementById('show-utr').innerText = val;
+    function check() {
+        var input = document.getElementById('utr-in').value;
+        if(input.length === 12) {
+            document.getElementById('first-view').style.display = 'none';
+            document.getElementById('success-view').style.display = 'block';
         } else {
-            alert("Please enter a valid 12-digit UTR number.");
+            alert("Please enter 12 digit UTR");
         }
     }
 </script>
