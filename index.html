@@ -7,7 +7,7 @@
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background-color: #fcfcfc; color: #333; }
         
-        /* Header */
+        /* Header & Sub-header */
         .header { background: #ea5455; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: center; position: relative; height: 30px; }
         .back-btn { font-size: 28px; cursor: pointer; color: white; border: none; background: none; position: absolute; left: 10px; line-height: 1; }
         .header-text { font-size: 16px; font-weight: 600; }
@@ -22,14 +22,7 @@
         .val { font-weight: bold; font-size: 15px; flex-grow: 1; text-align: right; margin-right: 15px; }
         .copy-btn { border: 1px solid #3b82f6; color: #3b82f6; background: white; padding: 6px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; }
 
-        /* Help Link */
         .help-link { color: #3b82f6; font-size: 13px; text-decoration: none; display: inline-block; margin: 15px 0; cursor: pointer; }
-
-        /* Modal / Pop-up Style */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.7); overflow-y: auto; }
-        .modal-content { background-color: white; margin: 10% auto; padding: 20px; border-radius: 12px; width: 85%; max-width: 400px; text-align: center; position: relative; }
-        .close-modal { position: absolute; right: 15px; top: 10px; font-size: 24px; cursor: pointer; color: #666; }
-        .guide-img { width: 100%; border-radius: 8px; margin-top: 15px; border: 1px solid #ddd; }
 
         /* Apps Grid */
         .grid-apps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
@@ -39,95 +32,99 @@
 
         /* Input & Button */
         .utr-input-box { border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; padding: 12px 0; margin-bottom: 15px; }
+        .utr-input-box b { margin-right: 15px; }
         .utr-input-box input { border: none; outline: none; font-size: 16px; width: 100%; }
         .submit-btn { background: #3b82f6; color: white; border: none; width: 100%; padding: 14px; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; }
-        
+
+        /* কাস্টম গ্রিন সাকসেস পপ-আপ ডিজাইন */
+        #success-popup {
+            display: none; 
+            position: fixed; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background-color: #10b981; /* সবুজ রঙ */
+            color: white; 
+            padding: 25px; 
+            border-radius: 15px; 
+            text-align: center; 
+            z-index: 2000; 
+            width: 80%; 
+            max-width: 300px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        #success-popup h2 { margin: 0 0 10px 0; font-size: 20px; }
+        #success-popup p { margin: 0 0 20px 0; font-size: 14px; }
+        #success-popup .ok-btn { background: white; color: #10b981; border: none; padding: 10px 30px; border-radius: 20px; font-weight: bold; cursor: pointer; }
+
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1999; }
+
         .notice { margin-top: 20px; font-size: 12px; font-weight: bold; color: #ef4444; line-height: 1.5; }
     </style>
 </head>
 <body>
 
-<div id="payment-page">
-    <div class="header">
-        <span class="back-btn">‹</span>
-        <span class="header-text">Premium Server (Safe)</span>
+<div class="header">
+    <span class="back-btn">‹</span>
+    <span class="header-text">Premium Server (Safe)</span>
+</div>
+<div class="sub-header">Payment</div>
+
+<div class="container">
+    <div class="timer-row">
+        <span>Order will be closed in:</span>
+        <span><span class="t-unit" id="m">8</span> : <span class="t-unit" id="s">45</span></span>
     </div>
-    <div class="sub-header">Payment</div>
 
-    <div class="container">
-        <div class="timer-row">
-            <span>Order will be closed in:</span>
-            <span><span class="t-unit" id="m">8</span> : <span class="t-unit" id="s">45</span></span>
-        </div>
+    <div class="data-card">
+        <span class="label">Payee Name</span>
+        <span class="val" id="name">S DATTATHREYA</span>
+        <button class="copy-btn" onclick="copy('name')">COPY</button>
+    </div>
+    <div class="data-card">
+        <span class="label">Amount</span>
+        <span class="val">₹ <span id="amnt">5200</span></span>
+        <button class="copy-btn" onclick="copy('amnt')">COPY</button>
+    </div>
+    <div class="data-card">
+        <span class="label">VPA/UPI ID</span>
+        <span class="val" id="vpa">444444784@axl</span>
+        <button class="copy-btn" onclick="copy('vpa')">COPY</button>
+    </div>
 
-        <div class="data-card">
-            <span class="label">Payee Name</span>
-            <span class="val" id="name">S DATTATHREYA</span>
-            <button class="copy-btn" onclick="copy('name')">COPY</button>
-        </div>
-        <div class="data-card">
-            <span class="label">Amount</span>
-            <span class="val">₹ <span id="amnt">5200</span></span>
-            <button class="copy-btn" onclick="copy('amnt')">COPY</button>
-        </div>
-        <div class="data-card">
-            <span class="label">VPA/UPI ID</span>
-            <span class="val" id="vpa">444444784@axl</span>
-            <button class="copy-btn" onclick="copy('vpa')">COPY</button>
-        </div>
+    <div class="help-link">②How to transfer money🔗</div>
 
-        <div class="help-link" onclick="openModal()">②How to transfer money🔗</div>
-
-        <div class="grid-apps">
-            <div class="app-box"><span class="pp-color">PhonePe</span></div>
-            <div class="app-box">
-                <div class="gp-color">
-                    <span style="color: #4285F4;">G</span><span style="color: #EA4335;">P</span><span style="color: #FBBC05;">a</span><span style="color: #34A853;">y</span>
-                </div>
+    <div class="grid-apps">
+        <div class="app-box"><span class="pp-color">PhonePe</span></div>
+        <div class="app-box">
+            <div class="gp-color">
+                <span style="color: #4285F4;">G</span><span style="color: #EA4335;">P</span><span style="color: #FBBC05;">a</span><span style="color: #34A853;">y</span>
             </div>
         </div>
+    </div>
 
-        <div class="utr-input-box">
-            <b style="margin-right: 15px;">UTR</b>
-            <input type="text" id="utr_input" placeholder="Input UTR number" maxlength="12">
-        </div>
-        <button class="submit-btn" onclick="submitUTR()">Submit UTR</button>
+    <div class="utr-input-box">
+        <b>UTR</b>
+        <input type="text" id="utr_input" placeholder="Input UTR number" maxlength="12">
+    </div>
+    <button class="submit-btn" onclick="submitUTR()">Submit UTR</button>
 
-        <div class="notice">
-            Notice:<br>
-            1. One UPI can only transfer money once.<br>
-            2. Don't change the payment amount.
-        </div>
+    <div class="notice">
+        Notice:<br>
+        1. One UPI can only transfer money once.<br>
+        2. Don't change the payment amount.
     </div>
 </div>
 
-<div id="howToModal" class="modal">
-    <div class="modal-content">
-        <span class="close-modal" onclick="closeModal()">&times;</span>
-        <h3>How to Pay</h3>
-        <p style="font-size: 14px; color: #666;">Follow these steps to complete payment:</p>
-        
-        <img src="https://via.placeholder.com/300x450.png?text=Step+1:+Copy+UPI+ID+and+Pay" alt="Guide" class="guide-img">
-        
-        <p style="margin-top: 15px; font-weight: bold; color: #3b82f6;">Step: Copy UPI -> Open App -> Pay -> Input UTR</p>
-        <button class="submit-btn" style="margin-top: 10px;" onclick="closeModal()">Got it</button>
-    </div>
+<div class="overlay" id="overlay"></div>
+<div id="success-popup">
+    <div style="font-size: 40px; margin-bottom: 10px;">✔</div>
+    <h2>Payment Successful</h2>
+    <p>Thanks for your payment!</p>
+    <button class="ok-btn" onclick="closeSuccess()">Close</button>
 </div>
 
 <script>
-    // পপ-আপ কন্ট্রোল
-    function openModal() {
-        document.getElementById("howToModal").style.display = "block";
-    }
-    function closeModal() {
-        document.getElementById("howToModal").style.display = "none";
-    }
-    // উইন্ডোর বাইরে ক্লিক করলে পপ-আপ বন্ধ হবে
-    window.onclick = function(event) {
-        let modal = document.getElementById("howToModal");
-        if (event.target == modal) { modal.style.display = "none"; }
-    }
-
     function copy(id) {
         const t = document.getElementById(id).innerText;
         navigator.clipboard.writeText(t);
@@ -135,11 +132,20 @@
     }
 
     function submitUTR() {
-        if(document.getElementById('utr_input').value.length === 12) {
-            alert("UTR Submitted Successfully!");
+        const utrVal = document.getElementById('utr_input').value;
+        if(utrVal.length === 12) {
+            // পপ-আপ দেখাবে
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('success-popup').style.display = 'block';
         } else {
-            alert("Please enter 12 digit UTR");
+            alert("Please enter a valid 12-digit UTR number");
         }
+    }
+
+    function closeSuccess() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('success-popup').style.display = 'none';
+        // ইচ্ছা করলে এখানে পেজ রিফ্রেশ বা রিডাইরেক্ট কোড দিতে পারেন
     }
 
     // টাইমার
