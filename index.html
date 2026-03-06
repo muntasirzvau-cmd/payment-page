@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Payment Page</title>
+    <title>Payment Gateway</title>
     <style>
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background-color: #fcfcfc; color: #333; }
         .header { background: #ea5455; color: white; padding: 15px; font-weight: bold; display: flex; align-items: center; font-size: 18px; height: 20px; }
@@ -22,8 +22,8 @@
         .help-link { color: #3b82f6; font-size: 13px; text-decoration: none; display: block; margin: 15px 0; }
         
         .grid-apps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .app-box { background: white; border: 1px solid #e5e7eb; border-radius: 8px; height: 60px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .app-box img { max-height: 25px; width: auto; object-fit: contain; } /* Adjusted image height for clarity */
+        .app-box { background: white; border: 1px solid #e5e7eb; border-radius: 8px; height: 60px; display: flex; align-items: center; justify-content: center; }
+        .app-box img { max-height: 25px; width: auto; }
 
         .utr-hint { color: #3b82f6; font-size: 13px; margin-bottom: 10px; display: block; }
         .utr-input-box { background: white; border-bottom: 1px solid #f3f4f6; display: flex; align-items: center; padding: 12px 0; margin-bottom: 15px; }
@@ -46,9 +46,13 @@
     <div class="container">
         <div class="timer-row">
             <span>Order will be closed in:</span>
-            <span>
-                <span class="t-unit" id="m">8</span> : <span class="t-unit" id="s">45</span>
-            </span>
+            <span><span class="t-unit" id="m">8</span> : <span class="t-unit" id="s">45</span></span>
+        </div>
+
+        <div class="data-card">
+            <span class="label">Payee Name</span>
+            <span class="val" id="name"></span>
+            <button class="copy-btn" onclick="copy('name')">COPY</button>
         </div>
 
         <div class="data-card">
@@ -66,18 +70,10 @@
         <a href="#" class="help-link">②How to transfer money🔗</a>
 
         <div class="grid-apps">
-            <div class="app-box">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/e/e1/UPI-Logo.png" alt="PhonePe">
-            </div>
-            <div class="app-box">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Paytm_Logo.png" alt="Paytm">
-            </div>
-            <div class="app-box">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/f2/Google_Pay_Logo.svg" alt="Google Pay">
-            </div>
-            <div class="app-box">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/BHIM_Logo.png" alt="BHIM">
-            </div>
+            <div class="app-box"><img src="https://logowik.com/content/uploads/images/phonepe-logo-icon.jpg"></div>
+            <div class="app-box"><img src="https://logowik.com/content/uploads/images/paytm7772.jpg"></div>
+            <div class="app-box"><img src="https://logowik.com/content/uploads/images/google-pay8390.jpg"></div>
+            <div class="app-box"><img src="https://logowik.com/content/uploads/images/bhim-upi-logo9845.jpg"></div>
         </div>
 
         <div class="utr-hint">↓ Fill the UTR numbers after you done payment</div>
@@ -105,10 +101,10 @@
 
 <script>
     const p = new URLSearchParams(window.location.search);
+    document.getElementById('name').innerText = p.get('nameInput') || "S DATTATHREYA";
     document.getElementById('amnt').innerText = p.get('amntInput') || "5200";
     document.getElementById('vpa').innerText = p.get('vpaInput') || "444444784@axl";
 
-    // টাইমার ফাংশন (৮:৪৫ থেকে শুরু) - এটি সচল থাকবে
     let totalSec = (8 * 60) + 45;
     function startTimer() {
         let timer = setInterval(function() {
@@ -116,10 +112,7 @@
             let seconds = totalSec % 60;
             document.getElementById('m').innerText = minutes;
             document.getElementById('s').innerText = seconds < 10 ? '0' + seconds : seconds;
-            if (totalSec <= 0) {
-                clearInterval(timer);
-                // Optionally handle time-up state here
-            }
+            if (totalSec <= 0) clearInterval(timer);
             totalSec--;
         }, 1000);
     }
@@ -127,11 +120,8 @@
 
     function copy(id) {
         const t = document.getElementById(id).innerText;
-        navigator.clipboard.writeText(t).then(() => {
-            alert("Copied!");
-        }).catch(err => {
-            // alert('Failed to copy');
-        });
+        navigator.clipboard.writeText(t);
+        alert("Copied!");
     }
 
     function submitUTR() {
