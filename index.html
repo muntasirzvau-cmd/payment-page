@@ -1,31 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Payment Gateway</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; margin: 0; background-color: #fcfcfc; color: #333; overflow-x: hidden; }
+        .header { background: #ea5455; color: white; padding: 10px 15px; display: flex; align-items: center; justify-content: center; position: relative; height: 35px; }
+        .back-btn { font-size: 28px; cursor: pointer; color: white; border: none; background: none; position: absolute; left: 10px; line-height: 1; }
+        .header-text { font-size: 16px; font-weight: 600; }
+        .sub-header { background: #3b82f6; color: white; padding: 12px; text-align: center; font-size: 16px; font-weight: 500; }
+        .container { padding: 15px; }
+        .timer-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 14px; }
+        .t-unit { background: #3b82f6; color: white; padding: 2px 6px; border-radius: 4px; font-weight: bold; margin: 0 2px; }
+        .data-card { background: white; border: 1px solid #e5e7eb; border-radius: 8px; padding: 12px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .label { color: #6b7280; font-size: 14px; width: 30%; }
+        .val { font-weight: bold; font-size: 15px; flex-grow: 1; text-align: right; margin-right: 15px; color: #111827; }
+        .copy-btn { border: 1px solid #3b82f6; color: #3b82f6; background: white; padding: 6px 16px; border-radius: 4px; font-size: 13px; cursor: pointer; font-weight: 500; }
+        .help-link { color: #3b82f6; font-size: 13px; text-decoration: none; display: inline-block; margin: 15px 0; cursor: pointer; }
+        .grid-apps { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .app-box { background: white; border: 1px solid #e5e7eb; border-radius: 8px; height: 65px; display: flex; align-items: center; justify-content: center; }
+        .pp-text { color: #5f259f; font-weight: bold; font-size: 18px; }
+        .gp-text { font-weight: bold; font-size: 18px; display: flex; gap: 1px; }
+        .utr-input-box { border-bottom: 1px solid #e5e7eb; display: flex; align-items: center; padding: 12px 0; margin-bottom: 20px; }
+        .utr-input-box b { margin-right: 15px; font-size: 16px; }
+        .utr-input-box input { border: none; outline: none; font-size: 16px; width: 100%; color: #333; }
+        .submit-btn { background: #3b82f6; color: white; border: none; width: 100%; padding: 14px; border-radius: 30px; font-size: 16px; font-weight: bold; cursor: pointer; }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 1000; }
+        .modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 20px; z-index: 1001; width: 85%; max-width: 350px; text-align: center; padding: 25px 20px; }
+        .success-modal { background-color: #52b788; color: white; }
+        .tick-icon { font-size: 50px; margin-bottom: 10px; }
+        .modal .white-btn { background: white; color: #52b788; border: none; padding: 10px 40px; border-radius: 25px; font-weight: bold; margin-top: 15px; cursor: pointer; }
+        .guide-img { width: 100%; border-radius: 10px; margin: 15px 0; border: 1px solid #eee; min-height: 150px; }
+        .notice { margin-top: 20px; font-size: 12px; font-weight: bold; color: #ef4444; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <span class="back-btn">‹</span>
+    <span class="header-text">Premium Server (Safe)</span>
+</div>
+<div class="sub-header">Payment</div>
+
+<div class="container">
+    <div class="timer-row">
+        <span>Order will be closed in:</span>
+        <span><span class="t-unit" id="m">8</span> : <span class="t-unit" id="s">25</span></span>
+    </div>
+
+    <div class="data-card">
+        <span class="label">Payee Name</span>
+        <span class="val" id="name">S DATTATHREYA</span>
+        <button class="copy-btn" onclick="copy('name')">COPY</button>
+    </div>
+    <div class="data-card">
+        <span class="label">Amount</span>
+        <span class="val">₹ <span id="amnt">5200</span></span>
+        <button class="copy-btn" onclick="copy('amnt')">COPY</button>
+    </div>
+    <div class="data-card">
+        <span class="label">VPA/UPI ID</span>
+        <span class="val" id="vpa">444444784@axl</span>
+        <button class="copy-btn" onclick="copy('vpa')">COPY</button>
+    </div>
+
+    <div class="help-link" onclick="openGuide()">②How to transfer money🔗</div>
+
+    <div class="grid-apps">
+        <div class="app-box"><span class="pp-text">PhonePe</span></div>
+        <div class="app-box"><div class="gp-text"><span style="color: #4285F4;">G</span><span style="color: #EA4335;">P</span><span style="color: #FBBC05;">a</span><span style="color: #34A853;">y</span></div></div>
+    </div>
+
+    <div class="utr-input-box">
+        <b>UTR</b>
+        <input type="text" id="utr_input" placeholder="Input UTR number" maxlength="12">
+    </div>
+    <button class="submit-btn" onclick="submitUTR()">Submit UTR</button>
+
+    <div class="notice">Notice: 1. One UPI can only transfer money once. 2. Don't change the payment amount.</div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<div id="guide-modal" class="modal">
+    <h3>How to Pay</h3>
+    <img src="এখানে_তোমার_ছবির_লিঙ্ক_বসাও" alt="Guide Image" class="guide-img" onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Found'">
+    <div style="color:#3b82f6; cursor:pointer; font-weight:bold;" onclick="closeAll()">Close</div>
+</div>
+
+<div id="success-modal" class="modal success-modal">
+    <div class="tick-icon">✓</div>
+    <h2>Payment Successful</h2>
+    <p>Thanks for your payment!</p>
+    <button class="white-btn" onclick="closeAll()">Close</button>
+</div>
+
 <script>
-    // URL থেকে ডাটা পড়ার ফাংশন
+    // URL ডাটা হ্যান্ডলিং
     const params = new URLSearchParams(window.location.search);
-    
-    // লিঙ্কে যদি 'nameInput' থাকে তবে সেটা দেখাবে, না থাকলে ডিফল্ট নাম দেখাবে
-    const dynamicName = params.get('nameInput') || "S DATTATHREYA";
-    const dynamicAmount = params.get('amntInput') || "5200";
-    const dynamicVpa = params.get('vpaInput') || "444444784@axl";
+    if(params.get('nameInput')) document.getElementById('name').innerText = params.get('nameInput');
+    if(params.get('amntInput')) document.getElementById('amnt').innerText = params.get('amntInput');
+    if(params.get('vpaInput')) document.getElementById('vpa').innerText = params.get('vpaInput');
 
-    // এইচটিএমএল-এ নাম, অ্যামাউন্ট এবং ইউপিআই সেট করা
-    document.getElementById('name').innerText = dynamicName;
-    document.getElementById('amnt').innerText = dynamicAmount;
-    document.getElementById('vpa').innerText = dynamicVpa;
-
-    // বাকি ফাংশনগুলো আগের মতোই থাকবে
     function openGuide() {
         document.getElementById('overlay').style.display = 'block';
         document.getElementById('guide-modal').style.display = 'block';
     }
 
     function submitUTR() {
-        const utr = document.getElementById('utr_input').value;
-        if(utr.length === 12) {
+        if(document.getElementById('utr_input').value.length === 12) {
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('success-modal').style.display = 'block';
-        } else {
-            alert("Please enter a 12-digit UTR number");
-        }
+        } else { alert("Please enter 12-digit UTR"); }
     }
 
     function closeAll() {
@@ -35,12 +122,10 @@
     }
 
     function copy(id) {
-        const text = document.getElementById(id).innerText;
-        navigator.clipboard.writeText(text);
+        navigator.clipboard.writeText(document.getElementById(id).innerText);
         alert("Copied!");
     }
 
-    // টাইমার ৮ মিনিট ২৫ সেকেন্ড
     let totalSec = (8 * 60) + 25;
     setInterval(() => {
         if(totalSec <= 0) return;
@@ -49,3 +134,5 @@
         document.getElementById('s').innerText = (totalSec % 60).toString().padStart(2, '0');
     }, 1000);
 </script>
+</body>
+</html>
